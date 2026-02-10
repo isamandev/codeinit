@@ -1,0 +1,102 @@
+[
+  {
+    "id": "1",
+    "title": "Designing Interfaces: Patterns for Effective Interaction Design",
+    "author": "Jenifer Tidwell",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "الگوها و راهکارهایی برای طراحی رابط‌های کاربری قابل استفاده و زیبا.",
+    "published": "2010",
+    "pages": 480,
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "title": "Don't Make Me Think",
+    "author": "Steve Krug",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "راهنمایی کاربردی برای طراحی وب‌سایت‌های ساده و قابل فهم.",
+    "published": "2000",
+    "pages": 216,
+    "createdAt": "2024-01-02T00:00:00.000Z"
+  },
+  {
+    "id": "3",
+    "title": "Refactoring UI",
+    "author": "Adam Wathan & Steve Schoger",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "نکات عملی برای بهبود ظاهر رابط‌های کاربری و تجربه کاربری.",
+    "published": "2019",
+    "pages": 256,
+    "createdAt": "2024-01-03T00:00:00.000Z"
+  },
+  {
+    "id": "4",
+    "title": "HTML and CSS: Design and Build Websites",
+    "author": "Jon Duckett",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "مقدمه‌ای تصویری و کاربردی برای HTML و CSS مناسب مبتدیان.",
+    "published": "2011",
+    "pages": 512,
+    "createdAt": "2024-01-04T00:00:00.000Z"
+  },
+  {
+    "id": "5",
+    "title": "JavaScript: The Good Parts",
+    "author": "Douglas Crockford",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "مروری بر قسمت‌های مفید و پراستفاده جاوااسکریپت.",
+    "published": "2008",
+    "pages": 176,
+    "createdAt": "2024-01-05T00:00:00.000Z"
+  },
+  {
+    "id": "6",
+    "title": "You Don't Know JS (Yet)",
+    "author": "Kyle Simpson",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "مجموعه‌ای عمیق برای درک عمیق‌تر زبان جاوااسکریپت.",
+    "published": "2020",
+    "pages": 278,
+    "createdAt": "2024-01-06T00:00:00.000Z"
+  },
+  {
+    "id": "7",
+    "title": "Learning React",
+    "author": "Alex Banks & Eve Porcello",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "مبانی ری‌اکت و نحوه‌ی ساخت اپلیکیشن‌های مدرن با آن.",
+    "published": "2020",
+    "pages": 350,
+    "createdAt": "2024-01-07T00:00:00.000Z"
+  },
+  {
+    "id": "8",
+    "title": "CSS Secrets",
+    "author": "Lea Verou",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "ترفندها و تکنیک‌های CSS برای حل مسائل طراحی روزمره.",
+    "published": "2015",
+    "pages": 296,
+    "createdAt": "2024-01-08T00:00:00.000Z"
+  },
+  {
+    "id": "9",
+    "title": "Design Systems",
+    "author": "Alla Kholmatova",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "نحوه‌ی ساخت و نگهداری یک سیستم طراحی مؤثر برای تیم‌ها.",
+    "published": "2017",
+    "pages": 200,
+    "createdAt": "2024-01-09T00:00:00.000Z"
+  },
+  {
+    "id": "10",
+    "title": "The Principles of Beautiful Web Design",
+    "author": "Jason Beaird",
+    "imageUrl": "/harry-potter-book.jpg",
+    "description": "اصول طراحی زیبا برای وب؛ تعادل، رنگ، تایپوگرافی و ترکیب‌بندی.",
+    "published": "2010",
+    "pages": 240,
+    "createdAt": "2024-01-10T00:00:00.000Z"
+  }
+]

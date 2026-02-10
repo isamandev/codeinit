@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f1f1f1;
+  --background: #ffffff;
   --foreground: #171717;
+
+  /* Scarlet Rose palette */
+  --color-scarlet-rose: #c7392b;
+  --color-rich-coral: #df6446;
+  --color-bread: #eed0a8;
+  --color-cork: #a5876a;
+  --color-german-camo: #866c53;
+  --muted-foreground: #6b6b6b;
 }
 
 @theme inline {
@@ -22,7 +30,52 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Use Vazirmatn when available via next/font local variable */
+  font-family: var(--font-vazirmatn), Arial, Helvetica, sans-serif;
+}
+
+/* Button styles using palette variables */
+.btn-primary {
+  background: linear-gradient(
+    90deg,
+    var(--color-scarlet-rose),
+    var(--color-rich-coral)
+  );
+  color: white;
+  border-color: transparent;
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.btn-secondary {
+  background: var(--color-bread);
+  color: var(--color-german-camo);
+  border-color: var(--color-cork);
+}
+.btn-secondary:hover {
+  filter: brightness(0.98);
+}
+
+.btn-tertiary {
+  background: transparent;
+  color: var(--color-german-camo);
+  border-color: transparent;
+}
+.btn-tertiary:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* Book card / typography accents */
+.book-title {
+  color: var(--color-german-camo);
+}
+.book-author {
+  color: var(--color-cork);
+}
+.book-cover {
+  border-color: var(--color-cork);
+  background: var(--color-bread);
 }
 
 @media screen and (min-width: 1024px) {

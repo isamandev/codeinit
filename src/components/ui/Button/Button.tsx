@@ -9,20 +9,17 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-const Button = ({ children, type }: ButtonProps) => {
+const Button = ({ children, type = "primary", onClick }: ButtonProps) => {
   const basicStyles =
     "min-h-full p-2 border-2 rounded-2xl font-semibold drop-shadow-xs hover:drop-shadow-md transition-all duration-200";
-  const typeStyles = {
-    primary:
-      "border-blue-700 text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700",
-    secondary: "border-gray-300 text-gray-700 hover:bg-gray-50",
-    tertiary: "border-transparent text-gray-500 hover:bg-gray-100",
+  const typeStyles: Record<string, string> = {
+    primary: "btn-primary",
+    secondary: "btn-secondary",
+    tertiary: "btn-tertiary",
   };
+
   return (
-    <button
-      className={cn(basicStyles, type ? typeStyles[type] : typeStyles.primary)}
-      onClick={() => {}}
-    >
+    <button className={cn(basicStyles, typeStyles[type])} onClick={onClick}>
       {children}
     </button>
   );
