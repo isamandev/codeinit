@@ -1,12 +1,18 @@
-import BookCard from "../../../components/BookCard/BookCard";
-import { readPosts } from "@/lib/posts";
+import BookCard from "@/features/books/BookCard/BookCard";
+import type { Post } from "@/shared/lib/posts";
 
 const page = async () => {
-  const posts = await readPosts();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/books`,
+  );
+  const posts: Post[] = res.ok ? await res.json() : [];
+  const sorted = posts
+    .slice()
+    .sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
 
   return (
     <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
-      {posts.map((p) => (
+      {sorted.map((p: Post) => (
         <BookCard
           key={p.id}
           title={p.title}

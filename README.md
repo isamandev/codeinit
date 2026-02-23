@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## AI Intro Setup
+
+برای فعال شدن تولید خودکار معرفی کتاب با AI، یک فایل `.env.local` در ریشه پروژه بسازید و مقدار زیر را تنظیم کنید:
+
+```bash
+OPENROUTER_API_KEY=your_openrouter_api_key
+```
+
+بعد از تنظیم متغیر محیطی، سرور توسعه را ری‌استارت کنید.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

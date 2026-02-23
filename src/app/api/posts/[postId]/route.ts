@@ -1,12 +1,14 @@
 export const runtime = "nodejs";
 
-import { readPosts, writePosts } from "@/lib/posts";
+import { readPosts, writePosts } from "@/shared/lib/posts";
+import { readArticles } from "@/shared/lib/articles";
 
 type Params = { params: { postId: string } };
 
 export async function GET(_request: Request, { params }: Params) {
   const id = params.postId;
-  const posts = await readPosts();
+  // Only consider article items for public GET detail
+  const posts = await readArticles();
   const post = posts.find((p) => p.id === id);
   if (!post)
     return new Response(JSON.stringify({ error: "not found" }), {
@@ -34,11 +36,9 @@ export async function PUT(request: Request, { params }: Params) {
     return new Response(JSON.stringify(updated), {
       headers: { "Content-Type": "application/json" },
     });
-  } catch (err: any) {
-    return new Response(
-      JSON.stringify({ error: String(err?.message ?? err) }),
-      { status: 500 },
-    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return new Response(JSON.stringify({ error: message }), { status: 500 });
   }
 }
 

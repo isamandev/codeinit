@@ -11,6 +11,42 @@
   --color-cork: #a5876a;
   --color-german-camo: #866c53;
   --muted-foreground: #6b6b6b;
+  --muted-background: #fbf3ea;
+
+  /* Extended harmonious palette */
+  --color-ember: #d65a4f;
+  --color-terracotta: #c77b5b;
+  --color-sand: #f6eadf;
+  --color-olive: #6b7b4c;
+  --color-forest: #355c4a;
+  --color-steel: #3b5568;
+  --color-navy: #1f4b66;
+
+  /* Semantic aliases */
+  --color-accent: var(--color-ember);
+  --color-accent-contrast: #ffffff;
+
+  /* Additional shades & semantic roles */
+  --color-rose: #e06b66;
+  --color-peach: #f3b59c;
+  --color-cream: #fff6ec;
+  --color-mint: #8fd3b4;
+  --color-teal: #2a8a84;
+  --color-indigo: #4b6cb7;
+  --color-violet: #7c5fa3;
+  --color-charcoal: #2b3440;
+  --color-gray-200: #e6e6e6;
+
+  /* Semantic aliases for UI states */
+  --color-success: var(--color-mint);
+  --color-info: var(--color-steel);
+  --color-warning: var(--color-terracotta);
+  --color-danger: var(--color-scarlet-rose);
+
+  /* Muted variants */
+  --muted-1: #f7f5f3;
+  --muted-2: #efeeec;
+  --muted-3: #d9d6d4;
 }
 
 @theme inline {
@@ -20,18 +56,15 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: white;
-    --foreground: black;
-  }
-}
+/* Dark / light switching removed — keep default variables in :root only */
 
 body {
   background: var(--background);
   color: var(--foreground);
   /* Use Vazirmatn when available via next/font local variable */
   font-family: var(--font-vazirmatn), Arial, Helvetica, sans-serif;
+  direction: rtl;
+  text-align: right;
 }
 
 /* Button styles using palette variables */
@@ -78,8 +111,26 @@ body {
   background: var(--color-bread);
 }
 
+/* Footer styles */
+.site-footer {
+  background: var(--color-gray-200);
+  border-top-color: var(--muted-3);
+}
+.site-footer a {
+  color: inherit;
+}
+
 @media screen and (min-width: 1024px) {
   body {
     font-size: 0.875rem;
   }
+}
+
+/* Utility to hide scrollbars while keeping scroll/drag behavior */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }

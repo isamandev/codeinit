@@ -2,7 +2,32 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button/Button";
+import useSWRMutation from "swr/mutation";
+import { mutate } from "swr";
+import { Button } from "@/shared/ui";
+
+type CreateBookArg = {
+  title: string;
+  author: string;
+  imageUrl: string;
+  description: string;
+  published: string;
+  pages?: number;
+};
+
+async function createBook(url: string, { arg }: { arg: CreateBookArg }) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(arg),
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new Error(data?.error || response.statusText || "خطا در ایجاد کتاب");
+  }
+  return response.json();
+}
 
 export default function Page() {
   const router = useRouter();
@@ -13,41 +38,41 @@ export default function Page() {
   const [description, setDescription] = useState("");
   const [published, setPublished] = useState("");
   const [pages, setPages] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const {
+    trigger,
+    isMutating,
+    error: mutationError,
+  } = useSWRMutation("/api/books", createBook);
+  const error =
+    uploadError ??
+    (mutationError instanceof Error
+      ? mutationError.message
+      : mutationError
+        ? String(mutationError)
+        : null);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setUploadError(null);
     if (!title.trim()) {
-      setError("عنوان اجباری است.");
+      setUploadError("عنوان اجباری است.");
       return;
     }
-    setLoading(true);
     try {
-      const res = await fetch("/api/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          author,
-          imageUrl,
-          description,
-          published,
-          pages: pages ? Number(pages) : undefined,
-        }),
+      await trigger({
+        title,
+        author,
+        imageUrl,
+        description,
+        published,
+        pages: pages ? Number(pages) : undefined,
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data?.error || res.statusText || "خطا در ایجاد پست");
-      }
-      const created = await res.json();
+      await mutate("/api/books");
       // پس از ایجاد، بازگشت به لیست کتاب‌ها
       router.push("/books");
-    } catch (err: any) {
-      setError(String(err?.message ?? err));
-    } finally {
-      setLoading(false);
+    } catch {
+      // error state managed by useSWRMutation
     }
   }
 
@@ -59,7 +84,7 @@ export default function Page() {
           <span className="text-sm text-gray-700">عنوان *</span>
           <input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(event) => setTitle(event.target.value)}
             className="mt-1 p-2 border rounded-md"
             required
           />
@@ -69,7 +94,7 @@ export default function Page() {
           <span className="text-sm text-gray-700">نویسنده</span>
           <input
             value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            onChange={(event) => setAuthor(event.target.value)}
             className="mt-1 p-2 border rounded-md"
           />
         </label>
@@ -80,7 +105,7 @@ export default function Page() {
           </span>
           <input
             value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            onChange={(event) => setImageUrl(event.target.value)}
             placeholder="یا آدرس وارد کنید: /uploads/your-image.jpg"
             className="mt-1 p-2 border rounded-md"
           />
@@ -89,30 +114,36 @@ export default function Page() {
             <input
               type="file"
               accept="image/*"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
+              onChange={async (event) => {
+                const file = event.target.files?.[0];
                 if (!file) return;
                 setUploading(true);
-                setError(null);
+                setUploadError(null);
                 try {
                   const reader = new FileReader();
                   reader.readAsDataURL(file);
                   reader.onload = async () => {
                     const data = reader.result as string;
-                    const res = await fetch("/api/upload", {
+                    const uploadResponse = await fetch("/api/upload", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ filename: file.name, data }),
                     });
-                    if (!res.ok) {
-                      const d = await res.json().catch(() => ({}));
-                      throw new Error(d?.error || res.statusText);
+                    if (!uploadResponse.ok) {
+                      const uploadErrorData = await uploadResponse
+                        .json()
+                        .catch(() => ({}));
+                      throw new Error(
+                        uploadErrorData?.error || uploadResponse.statusText,
+                      );
                     }
-                    const json = await res.json();
-                    setImageUrl(json.url);
+                    const uploadResult = await uploadResponse.json();
+                    setImageUrl(uploadResult.url);
                   };
-                } catch (err: any) {
-                  setError(String(err?.message ?? err));
+                } catch (error) {
+                  setUploadError(
+                    String(error instanceof Error ? error.message : error),
+                  );
                 } finally {
                   setUploading(false);
                 }
@@ -138,7 +169,7 @@ export default function Page() {
           <span className="text-sm text-gray-700">توضیحات</span>
           <textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(event) => setDescription(event.target.value)}
             rows={6}
             className="mt-1 p-2 border rounded-md"
           />
@@ -149,7 +180,7 @@ export default function Page() {
             <span className="text-sm text-gray-700">سال انتشار</span>
             <input
               value={published}
-              onChange={(e) => setPublished(e.target.value)}
+              onChange={(event) => setPublished(event.target.value)}
               className="mt-1 p-2 border rounded-md"
             />
           </label>
@@ -158,7 +189,7 @@ export default function Page() {
             <span className="text-sm text-gray-700">تعداد صفحات</span>
             <input
               value={pages}
-              onChange={(e) => setPages(e.target.value)}
+              onChange={(event) => setPages(event.target.value)}
               className="mt-1 p-2 border rounded-md"
             />
           </label>
@@ -168,7 +199,7 @@ export default function Page() {
 
         <div className="flex gap-3">
           <Button type="primary">
-            {loading ? "در حال ارسال..." : "ایجاد"}
+            {isMutating ? "در حال ارسال..." : "ایجاد"}
           </Button>
           <Button type="tertiary" onClick={() => router.back()}>
             انصراف

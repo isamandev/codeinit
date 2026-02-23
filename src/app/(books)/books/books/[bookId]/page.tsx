@@ -1,4 +1,4 @@
-import BookDetail from "../../../../components/BookDetail/BookDetail";
+import BookDetail from "@/features/books/BookDetail/BookDetail";
 
 type Params = {
   params: { bookId: string };
@@ -22,6 +22,7 @@ const page = ({ params }: Params) => {
   return (
     <main>
       <BookDetail
+        id={book.id}
         title={book.title}
         author={book.author}
         imageUrl={book.imageUrl}

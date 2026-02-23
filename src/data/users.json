@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "name": "ادمین",
+    "email": "admin@example.local",
+    "passwordEnv": "ADMIN_PASSWORD",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "2",
+    "name": "کاربر",
+    "email": "user@example.local",
+    "passwordEnv": "USER_PASSWORD",
+    "role": "user",
+    "createdAt": "2024-01-01T00:00:00.000Z"
+  }
+]

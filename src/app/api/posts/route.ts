@@ -1,9 +1,19 @@
 export const runtime = "nodejs";
 
-import { readPosts, writePosts } from "@/lib/posts";
+import { readPosts, writePosts } from "@/shared/lib/posts";
+import { readArticles } from "@/shared/lib/articles";
+
+function toStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const cleaned = value
+    .map((v) => (typeof v === "string" ? v.trim() : ""))
+    .filter(Boolean);
+  return cleaned.length ? [...new Set(cleaned)] : undefined;
+}
 
 export async function GET() {
-  const posts = await readPosts();
+  // Return only article items (exclude entries that represent books)
+  const posts = await readArticles();
   return new Response(JSON.stringify(posts), {
     headers: { "Content-Type": "application/json" },
   });
@@ -25,8 +35,11 @@ export async function POST(request: Request) {
       author: body.author ? String(body.author) : undefined,
       imageUrl: body.imageUrl ? String(body.imageUrl) : undefined,
       description: body.description ? String(body.description) : undefined,
+      aiIntro: body.aiIntro ? String(body.aiIntro) : undefined,
       published: body.published ? String(body.published) : undefined,
       pages: body.pages ? Number(body.pages) : undefined,
+      tags: toStringArray(body.tags),
+      categories: toStringArray(body.categories),
       createdAt: new Date().toISOString(),
     };
 
@@ -37,10 +50,8 @@ export async function POST(request: Request) {
       status: 201,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (err: any) {
-    return new Response(
-      JSON.stringify({ error: String(err?.message ?? err) }),
-      { status: 500 },
-    );
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return new Response(JSON.stringify({ error: message }), { status: 500 });
   }
 }
