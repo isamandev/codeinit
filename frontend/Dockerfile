@@ -13,7 +13,8 @@ COPY package*.json ./
 COPY frontend/package*.json ./frontend/
 
 # Install dependencies
-RUN npm install
+# Using --legacy-peer-deps because @typescript-eslint v8 doesn't officially support TS 7 yet
+RUN npm install --legacy-peer-deps
 
 # Copy frontend source
 COPY frontend ./frontend
