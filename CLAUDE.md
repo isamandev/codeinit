@@ -61,6 +61,36 @@ This project uses OpenSpec for spec-driven development.
 3. **Apply** → Implement the spec using /opsx:apply (full-stack, simple, readable)
 4. **Archive** → Archive the completed spec using /opsx:archive
 
+## Commit Convention
+
+Use emoji-prefixed commits following [this convention](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13):
+
+- **✨ feat**: New feature or functionality
+- **🐛 fix**: Bug fix
+- **📚 docs**: Documentation changes (README, guides, etc.)
+- **🎨 style**: Code style/formatting or presentation changes
+- **♻️ refactor**: Code restructuring without changing behavior
+- **⚡ perf**: Performance improvements
+- **✅ test**: Adding or updating tests
+- **🔧 chore**: Build process, dependencies, tooling, configuration
+- **🔐 security**: Security-related fixes or improvements
+
+**Format**: `<emoji> <type>: <description>`
+
+**Description rules**:
+- First line: concise summary (under 70 characters)
+- Body: detailed explanation of what and why (optional but recommended for significant changes)
+- No co-authored-by footer in the message body
+
+**Example**:
+```
+✨ feat: add user authentication with JWT tokens
+
+- Implement login/register endpoints
+- Add JWT token generation and validation
+- Create authentication middleware for protected routes
+```
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
