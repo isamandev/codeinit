@@ -27,6 +27,23 @@ codeinit/
 - Docker & Docker Compose
 - npm or yarn
 
+### Quick Start with Docker Compose (Recommended)
+
+For a complete development environment with PostgreSQL:
+
+```bash
+# Start all services
+docker compose up
+
+# Open in browser
+open http://localhost:3000
+
+# View logs
+docker compose logs -f
+```
+
+For detailed Docker setup instructions, see [DOCKER_SETUP.md](DOCKER_SETUP.md).
+
 ### Installation
 
 1. **Install dependencies for all workspaces:**
