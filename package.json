@@ -25,8 +25,5 @@
     "db:push": "npm run prisma:push --workspace=backend",
     "db:generate": "npm run prisma:generate --workspace=backend",
     "lint:ci": "npm run lint:ci --workspace=frontend"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
   }
 }
