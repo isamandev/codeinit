@@ -1,5 +1,5 @@
 "use client";
 
-export default function BooksScroller(_props: { books?: unknown[] }) {
+export default function BooksScroller() {
   return null;
 }

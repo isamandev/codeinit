@@ -9,6 +9,7 @@ export type User = {
 };
 
 export function safeUser(u: User) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...rest } = u as User;
   return rest;
 }

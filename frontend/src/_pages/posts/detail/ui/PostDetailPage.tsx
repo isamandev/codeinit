@@ -1,7 +1,3 @@
-type Props = {
-  params: { postId: string };
-};
-
-export default function PostDetailPage(_props: Props) {
+export default function PostDetailPage() {
   return null;
 }

@@ -1,5 +1,5 @@
 "use client";
 
-export default function BooksList(_props: { initialPosts?: unknown[] }) {
+export default function BooksList() {
   return null;
 }

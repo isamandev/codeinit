@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { User } from "./user";
 
 const SECRET = process.env.JWT_SECRET ?? "dev-secret-change-me";
 
@@ -19,7 +18,7 @@ export function verifyAuthToken(token: string) {
       role?: string;
     };
     return decoded;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

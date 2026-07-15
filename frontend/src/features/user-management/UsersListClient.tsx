@@ -55,7 +55,7 @@ export default function UsersListClient() {
     const promptedEmail = prompt("ایمیل:", user.email ?? "");
     const promptedPassword = prompt("پسورد (خالی برای حفظ):", "");
     const promptedRole = prompt("نقش:", user.role ?? "");
-    const body: any = { name: promptedName, email: promptedEmail };
+    const body: Record<string, string | null> = { name: promptedName, email: promptedEmail };
     if (promptedPassword) body.password = promptedPassword;
     if (promptedRole) body.role = promptedRole;
     const response = await fetch(`/api/users/${user.id}`, {
