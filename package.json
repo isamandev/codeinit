@@ -2,46 +2,31 @@
   "name": "codeinit",
   "version": "0.1.0",
   "private": true,
+  "description": "CodeInit - Frontend Engineering Job Board with Web Push & Telegram Notifications",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint --ext .ts,.tsx src",
-    "lint:ci": "eslint --ext .ts,.tsx --max-warnings=0 src",
-    "typecheck": "tsc --noEmit",
-    "check:boundaries": "node ./scripts/check-boundaries.js"
-  },
-  "dependencies": {
-    "@types/bcryptjs": "^2.4.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "bcryptjs": "^3.0.3",
-    "clsx": "^2.1.1",
-    "dayjs": "^1.11.19",
-    "jalaliday": "^3.1.1",
-    "jsonwebtoken": "^9.0.3",
-    "next": "16.1.6",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "swr": "^2.4.0",
-    "tailwind-merge": "^3.5.0"
-  },
-  "dependenciesMeta": {
-    "jsonwebtoken": {
-      "optional": false
-    }
+    "dev": "concurrently \"npm run dev --workspace=frontend\" \"npm run dev --workspace=backend\"",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=backend",
+    "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "start": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f postgres",
+    "db:migrate": "npm run prisma:migrate --workspace=backend",
+    "db:push": "npm run prisma:push --workspace=backend",
+    "db:generate": "npm run prisma:generate --workspace=backend",
+    "lint:ci": "npm run lint:ci --workspace=frontend"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^25",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@typescript-eslint/eslint-plugin": "^8.56.0",
-    "@typescript-eslint/parser": "^8.56.0",
-    "eslint": "^10.0.1",
-    "eslint-config-next": "16.1.6",
-    "madge": "^8.0.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "concurrently": "^8.2.2"
   }
 }

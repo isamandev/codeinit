@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Job model for storing job listings
+model Job {
+  id            String   @id @default(cuid())
+  title         String
+  company       String
+  description   String?
+  location      String?
+  employmentType String?
+  skills        String[]
+  url           String   @unique
+  source        String   // Source of the job (jobinja, quera, etc.)
+  sourceId      String?  // ID from the source website
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  notificationsSent NotificationLog[]
+
+  @@index([source])
+  @@index([createdAt])
+  @@map("jobs")
+}
+
+// User model for future authentication
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  telegramId    String?  @unique
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  pushSubscriptions PushSubscription[]
+
+  @@map("users")
+}
+
+// Push subscription model for Web Push notifications
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  keys      Json     // Contains p256dh and auth
+  active    Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("push_subscriptions")
+}
+
+// Job source configuration for crawler management
+model JobSource {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  url       String
+  active    Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("job_sources")
+}
+
+// Notification log for tracking sent notifications
+model NotificationLog {
+  id              String   @id @default(cuid())
+  jobId           String
+  notificationType String  // 'telegram' | 'push' | 'email'
+  status          String   // 'pending' | 'sent' | 'failed'
+  error           String?
+
+  sentAt          DateTime?
+  createdAt       DateTime @default(now())
+
+  // Relations
+  job             Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
+  @@index([notificationType])
+  @@index([createdAt])
+  @@map("notification_logs")
+}

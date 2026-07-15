@@ -23,5 +23,3 @@ jobs:
         run: npm run lint:ci
       - name: Dependency graph (detect cycles)
         run: npx madge --circular src || true
-      - name: Boundary checks
-        run: npm run check:boundaries

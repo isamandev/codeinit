@@ -1,46 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeInit - Frontend Engineering Job Board
 
-## Getting Started
+A modern job board platform for frontend engineering positions with Web Push and Telegram notifications.
 
-First, run the development server:
+## 📁 Monorepo Structure
 
+```
+codeinit/
+├── frontend/          # Next.js + FSD Architecture
+│   ├── app/          # Next.js App Router
+│   ├── src/          # FSD layers (entities, features, widgets, shared)
+│   └── package.json
+│
+├── backend/          # NestJS API Server
+│   ├── src/          # NestJS modules
+│   ├── prisma/       # Database schema
+│   └── package.json
+│
+├── docker-compose.yml # PostgreSQL setup
+└── package.json      # Workspace root
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- Docker & Docker Compose
+- npm or yarn
+
+### Installation
+
+1. **Install dependencies for all workspaces:**
+```bash
+npm install
+```
+
+2. **Start PostgreSQL:**
+```bash
+npm run docker:up
+```
+
+3. **Setup database schema:**
+```bash
+npm run db:push
+```
+
+### Running the Project
+
+**Development mode (both frontend & backend):**
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Frontend only:**
+```bash
+npm run dev:frontend
+```
 
-## AI Intro Setup
+**Backend only:**
+```bash
+npm run dev:backend
+```
 
-برای فعال شدن تولید خودکار معرفی کتاب با AI، یک فایل `.env.local` در ریشه پروژه بسازید و مقدار زیر را تنظیم کنید:
+### Access URLs
+
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:3001
+- **Health Check:** http://localhost:3001/health
+- **Status:** http://localhost:3001/api/status
+
+## 📦 Database
+
+### Prisma Commands
 
 ```bash
-OPENROUTER_API_KEY=your_openrouter_api_key
+# Generate Prisma Client
+npm run db:generate
+
+# Push schema changes
+npm run db:push
+
+# Create and run migrations
+npm run db:migrate
+
+# View Prisma Studio
+npm run prisma:studio --workspace=backend
 ```
 
-بعد از تنظیم متغیر محیطی، سرور توسعه را ری‌استارت کنید.
+## 🏗️ Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Frontend (Next.js + FSD)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The frontend follows Feature-Sliced Design (FSD) architecture:
 
-## Learn More
+- **`_app`** - Global providers, root layout
+- **`_pages`** - Page components (one per route)
+- **`widgets`** - Reusable UI blocks
+- **`features`** - User-facing features
+- **`entities`** - Business domain models
+- **`shared`** - Shared utilities, components, types
 
-To learn more about Next.js, take a look at the following resources:
+See `frontend/docs/fsd.md` for detailed architecture documentation.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Backend (NestJS)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Modular architecture with clear separation of concerns:
 
-## Deploy on Vercel
+- **`app.module`** - Main application module
+- **`jobs`** - Job CRUD operations (Phase 2)
+- **`crawler`** - Job website scraping (Phase 2)
+- **`telegram`** - Telegram notifications (Phase 2)
+- **`notifications`** - Web Push & email (Phase 2)
+- **`scheduler`** - Background jobs (Phase 2)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔄 API Communication
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Frontend communicates with backend via HTTP APIs:
+
+```
+Frontend (Next.js)
+     ↓ HTTP Requests
+Backend (NestJS)
+     ↓
+Database (PostgreSQL)
+```
+
+**No Server Actions or API Routes are used for business logic** - all backend logic lives in NestJS.
+
+## 🛠️ Development
+
+### Linting
+```bash
+npm run lint
+```
+
+### Type Checking
+```bash
+npm run typecheck
+```
+
+### Building
+```bash
+npm run build
+```
+
+## 📝 Phase 1 Status
+
+✅ Monorepo structure created
+✅ Frontend moved to `/frontend`
+✅ Backend skeleton created
+✅ Docker Compose setup
+✅ Prisma schema defined
+✅ Both applications verified
+
+### Phase 2 (Planned)
+- [ ] Jobs Module (CRUD API)
+- [ ] Crawler Module (Job scraping)
+- [ ] Telegram Integration
+- [ ] Web Push Notifications
+- [ ] Scheduler/Background Jobs
+
+## 📄 License
+
+Private project
