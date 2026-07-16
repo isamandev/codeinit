@@ -1,0 +1,68 @@
+# Docker Compose - Development Environment Only
+# This configuration is for local development with hot-reload
+# Not suitable for production use
+#
+# Usage: docker compose up
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: codeinit-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-codeinit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-codeinit_password}
+      POSTGRES_DB: ${DATABASE_NAME:-codeinit}
+    ports:
+      - "5432:5432"
+    volumes:
+      - codeinit-postgres-data:/var/lib/postgresql/data
+    networks:
+      - codeinit-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: codeinit-backend
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER:-codeinit}:${POSTGRES_PASSWORD:-codeinit_password}@postgres:5432/${DATABASE_NAME:-codeinit}
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/src:/app/backend/src
+      - ./backend/prisma:/app/backend/prisma
+    networks:
+      - codeinit-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: codeinit-frontend
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/frontend/src
+      - ./frontend/app:/app/frontend/app
+    networks:
+      - codeinit-network
+
+volumes:
+  codeinit-postgres-data:
+    driver: local
+
+networks:
+  codeinit-network:
+    driver: bridge
