@@ -17,7 +17,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - codeinit-postgres-data:/var/lib/postgresql/data
+      - codeinit-postgres-data:/var/lib/postgresql
     networks:
       - codeinit-network
 
@@ -41,23 +41,9 @@ services:
     networks:
       - codeinit-network
 
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    container_name: codeinit-frontend
-    depends_on:
-      - backend
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3001
-      NODE_ENV: development
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend/src:/app/frontend/src
-      - ./frontend/app:/app/frontend/app
-    networks:
-      - codeinit-network
+  # Frontend runs locally on the host machine, not in Docker
+  # Run locally with: npm run dev (from frontend directory)
+  # The local frontend will connect to the backend running in Docker on localhost:3001
 
 volumes:
   codeinit-postgres-data:

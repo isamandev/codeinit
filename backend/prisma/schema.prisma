@@ -2,12 +2,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // Job model for storing job listings
@@ -39,7 +39,8 @@ model User {
   id            String   @id @default(cuid())
   email         String   @unique
   name          String?
-  telegramId    String?  @unique
+
+  password      String?
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

@@ -1,10 +1,5 @@
 "use client";
 
-type Props = {
-  initialData?: unknown;
-  redirectAfter?: string;
-};
-
-export default function BookEditForm(_props: Props) {
+export default function BookEditForm() {
   return null;
 }

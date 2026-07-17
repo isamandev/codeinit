@@ -13,15 +13,18 @@ COPY package*.json ./
 COPY backend/package*.json ./backend/
 
 # Install dependencies
-RUN npm install
+# Using --legacy-peer-deps because @typescript-eslint v8 doesn't officially support TS 7 yet
+RUN npm install --legacy-peer-deps
 
 # Copy backend source and Prisma schema
 COPY backend/src ./backend/src
 COPY backend/tsconfig.json ./backend/
+COPY backend/eslint.config.js ./backend/
 COPY backend/prisma ./backend/prisma
 
 # Generate Prisma client
-RUN cd backend && npm run prisma:generate
+# Set a dummy DATABASE_URL for build-time schema generation (Prisma 7 requirement)
+RUN DATABASE_URL="postgresql://user:password@localhost:5432/codeinit" cd backend && npm run prisma:generate
 
 WORKDIR /app/backend
 
