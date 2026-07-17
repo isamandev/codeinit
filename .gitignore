@@ -12,8 +12,8 @@ node_modules/
 /coverage
 
 # Next.js
-/.next/
-/out/
+.next/
+out/
 
 # Build
 /build
@@ -54,3 +54,8 @@ next-env.d.ts
 *.db
 *.sqlite
 *.sqlite3
+
+# Generated
+backend/src/generated/
+
+openspec
