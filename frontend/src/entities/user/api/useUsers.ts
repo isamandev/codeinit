@@ -1,17 +1,20 @@
 "use client";
 
 import useSWR from "swr";
-
-type User = {
-  id: string;
-  name?: string;
-  email: string;
-  role?: string;
-  createdAt?: string;
-};
+import { getUsers } from "./usersApi";
+import { getStoredSession } from "../model/session";
+import type { User } from "../model/user";
 
 export function useUsers() {
-  const { data, error, isLoading, mutate } = useSWR<User[]>("/api/users");
+  const { data, error, isLoading, mutate } = useSWR<User[]>(
+    "users-list",
+    () => {
+      const stored = getStoredSession();
+      if (!stored) throw new Error("Not authenticated");
+      return getUsers(stored.token);
+    },
+    { shouldRetryOnError: false },
+  );
 
   return {
     users: data ?? [],
