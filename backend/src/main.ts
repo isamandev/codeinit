@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -12,6 +13,11 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // All routes live under /api/v1, except /health which is hit directly
+  // by the Docker healthcheck as an infra probe, not a client API call.
+  app.setGlobalPrefix('api', { exclude: ['health'] });
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+
   // Enable validation
   app.useGlobalPipes(
     new ValidationPipe({
@@ -20,6 +26,16 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // Swagger UI is served outside the /api/v1 versioned route tree, at /api/docs
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('CodeInit API')
+    .setDescription('REST API documentation for the CodeInit backend')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, swaggerDocument);
 
   const port = parseInt(process.env.PORT || '3001', 10);
   await app.listen(port);

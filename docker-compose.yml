@@ -28,8 +28,14 @@ services:
     container_name: codeinit-backend
     depends_on:
       - postgres
+    # Secrets (JWT_SECRET, VAPID keys, etc.) live in backend/.env, which is
+    # gitignored, instead of being hardcoded here.
+    env_file:
+      - ./backend/.env
     environment:
       NODE_ENV: development
+      # Overrides backend/.env's DATABASE_URL: inside the Docker network the
+      # database is reachable at the "postgres" hostname, not localhost.
       DATABASE_URL: postgresql://${POSTGRES_USER:-codeinit}:${POSTGRES_PASSWORD:-codeinit_password}@postgres:5432/${DATABASE_NAME:-codeinit}
       PORT: 3001
       FRONTEND_URL: http://localhost:3000
@@ -37,7 +43,17 @@ services:
       - "3001:3001"
     volumes:
       - ./backend/src:/app/backend/src
+      - ./backend/scripts:/app/backend/scripts
       - ./backend/prisma:/app/backend/prisma
+      - ./backend/package.json:/app/backend/package.json
+      - ./backend/prisma.config.ts:/app/backend/prisma.config.ts
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+    # This is an npm workspaces monorepo, so dependencies are installed from
+    # the repo root. Running npm install here (before npm run dev) picks up
+    # any package added to package.json since the image was last built,
+    # without needing a manual `docker compose build`.
+    command: sh -c "cd /app && npm install --legacy-peer-deps && cd backend && npm run dev"
     networks:
       - codeinit-network
 

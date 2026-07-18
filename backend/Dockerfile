@@ -18,13 +18,15 @@ RUN npm install --legacy-peer-deps
 
 # Copy backend source and Prisma schema
 COPY backend/src ./backend/src
+COPY backend/scripts ./backend/scripts
 COPY backend/tsconfig.json ./backend/
+COPY backend/prisma.config.ts ./backend/
 COPY backend/eslint.config.js ./backend/
 COPY backend/prisma ./backend/prisma
 
 # Generate Prisma client
 # Set a dummy DATABASE_URL for build-time schema generation (Prisma 7 requirement)
-RUN DATABASE_URL="postgresql://user:password@localhost:5432/codeinit" cd backend && npm run prisma:generate
+RUN cd backend && DATABASE_URL="postgresql://user:password@localhost:5432/codeinit" npm run generate
 
 WORKDIR /app/backend
 
