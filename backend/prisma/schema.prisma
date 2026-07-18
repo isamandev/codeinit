@@ -34,6 +34,12 @@ model Job {
   @@map("jobs")
 }
 
+// Role enum for authorization
+enum Role {
+  USER
+  ADMIN
+}
+
 // User model for future authentication
 model User {
   id            String   @id @default(cuid())
@@ -41,20 +47,90 @@ model User {
   name          String?
 
   password      String?
+  role          Role     @default(USER)
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   // Relations
   pushSubscriptions PushSubscription[]
+  lessonProgress    LessonProgress[]
 
   @@map("users")
+}
+
+// Course model — a course is an ordered list of chapters
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  chapters    Chapter[]
+
+  @@map("courses")
+}
+
+// Chapter model — an ordered list of lessons within a course
+model Chapter {
+  id       String @id @default(cuid())
+  courseId String
+  title    String
+  order    Int
+
+  // Relations
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons  Lesson[]
+
+  @@index([courseId])
+  @@map("chapters")
+}
+
+// Lesson model — a single lesson's full content
+model Lesson {
+  id        String @id @default(cuid())
+  chapterId String
+  title     String
+  order     Int
+
+  duration   String?
+  videoLabel String?
+  intro      String?
+  codeBlock  String?
+  body       String?
+
+  // Relations
+  chapter  Chapter           @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+
+  @@index([chapterId])
+  @@map("lessons")
+}
+
+// LessonProgress model — tracks per-user lesson completion
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime @default(now())
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@map("lesson_progress")
 }
 
 // Push subscription model for Web Push notifications
 model PushSubscription {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String?
   endpoint  String   @unique
   keys      Json     // Contains p256dh and auth
   active    Boolean  @default(true)
@@ -63,7 +139,7 @@ model PushSubscription {
   updatedAt DateTime @updatedAt
 
   // Relations
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("push_subscriptions")
