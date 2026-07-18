@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/entities/user";
+import { useSession } from "@/entities/user";
 
 interface AuthGuardProps {
   /**
@@ -15,7 +15,7 @@ interface AuthGuardProps {
 
 export default function AuthGuard({ role = "user" }: AuthGuardProps) {
   const router = useRouter();
-  const { user, isLoading, error } = useAuth();
+  const { user, isLoading, error } = useSession();
 
   useEffect(() => {
     if (isLoading) return;
@@ -25,9 +25,9 @@ export default function AuthGuard({ role = "user" }: AuthGuardProps) {
       return;
     }
 
-    if (role === "admin" && user.role !== "admin") {
+    if (role === "admin" && user.role !== "ADMIN") {
       router.replace("/dashboard");
-    } else if (role === "user" && user.role === "admin") {
+    } else if (role === "user" && user.role === "ADMIN") {
       router.replace("/panel");
     }
   }, [user, isLoading, error, router, role]);

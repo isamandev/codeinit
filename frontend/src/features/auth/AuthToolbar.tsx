@@ -1,22 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/entities/user";
+import { useSession, clearStoredSession } from "@/entities/user";
 
 export default function AuthToolbar() {
   const router = useRouter();
-  const { mutate } = useAuth();
+  const { mutate } = useSession();
 
   function handleLogout() {
-    fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    })
-      .catch((error) => console.warn("logout failed", error))
-      .finally(() => {
-        void mutate(null, false);
-        router.replace("/");
-      });
+    clearStoredSession();
+    void mutate(null, false);
+    router.replace("/");
   }
 
   return (
