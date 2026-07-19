@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { vazirmatnFD } from "@/shared/config/fonts";
+import { vazirmatnFD, archivo } from "@/shared/config/fonts";
 import "@app/globals.css";
 import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body
-        className={`${vazirmatnFD.variable} font-sans antialiased min-h-screen flex flex-col`}
+        className={`${vazirmatnFD.variable} ${archivo.variable} font-sans antialiased min-h-screen flex flex-col`}
       >
         <SWRProvider>
           <Header />
