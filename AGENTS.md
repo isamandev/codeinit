@@ -54,6 +54,26 @@ This project uses OpenSpec for spec-driven development.
 - Do NOT extract code into functions just to "make it cleaner" or "improve organization".
 - Inline simple operations directly where they are used.
 
+## Frontend Architecture (Feature-Sliced Design)
+
+The frontend (`frontend/src/`) follows [Feature-Sliced Design](https://feature-sliced.design/). Layers, from highest to lowest:
+
+`app` → `pages` → `widgets` → `features` → `entities` → `shared`
+
+A slice on a higher layer may only import from lower layers, never sideways or upward.
+
+- **`app`**: app-wide setup — providers, root layout, global routing.
+- **`pages`**: one slice per route/screen. A page's own `ui/` folder holds any UI that belongs only to that page.
+- **`widgets`**: large, self-sufficient UI blocks reused across multiple pages, or an independent large block within a single page.
+- **`features`**: main user interactions ("things users care to do" — submit a form, toggle a setting, add a comment). **Not everything needs to be a feature.** The test for whether something belongs here is reuse: if it's used on more than one page/widget, it's a feature; if it appears once and never gets reused, it stays in the page's own `ui/` folder instead.
+- **`entities`**: real-world business concepts the app works with (User, Book, Post) — their model/types and the UI for displaying them (cards, avatars).
+- **`shared`**: the foundation with no business logic — UI kit (e.g. shadcn components), API clients, generic utils, config. Nothing here should know about app-specific concepts.
+
+Rules:
+- **One slice per domain concept.** Do not create multiple feature slices for the same concept (e.g. one `features/auth` slice, never `features/auth` + `features/auth-forms`). If related pieces (session guard, login form, logout) all belong to "auth," they live together in one `features/auth` slice — unless a piece is only used on a single page, in which case it belongs in that page's `ui/` folder instead of the feature at all.
+- **Single-page UI is not a feature or widget.** If a block of UI (e.g. a form) is only ever rendered on one page, put it directly in that page's own `ui/` folder (`pages/<page>/ui/`), not in `features/` or `widgets/`. Promote it to a feature/widget only when a second page needs to reuse it.
+- Before creating a new feature slice, check whether an existing slice for the same concept already exists and extend that instead.
+
 ## Workflow Summary
 
 1. **Propose** → Create spec for the change using /opsx:propose
